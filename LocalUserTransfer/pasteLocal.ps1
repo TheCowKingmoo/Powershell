@@ -8,7 +8,7 @@ $msg   = 'Enter the AD account being copied'
 
 $userName = [Microsoft.VisualBasic.Interaction]::InputBox($msg, $title)
 
-
+$regFile = "*.reg"
 
 if( ( Test-Path "C:\Users\$userName" ) -eq $false )  {
 
@@ -52,12 +52,21 @@ $sourceFolders = Get-ChildItem -Path $sourcePath -Name
 $destPathFirst = "C:\Users\$userName"
 
 foreach( $folder in $sourceFolders )  {
+   
+  $actualSourcePath = $sourcePath + "\" + $folder    
 
-  $actualDestPath = $destPathFirst
+  if( $folder -eq $regFile )  {
+    
+    reg import $actualSourcePath
+  
+  }  else  {
 
-  $actualSourcePath = $sourcePath + "\" + $folder
-  Copy-Item $actualSourcePath -Destination $actualDestPath -Recurse -Force
+    $actualDestPath = $destPathFirst
 
+  
+    Copy-Item $actualSourcePath -Destination $actualDestPath -Recurse -Force
+  
+  }
 
 } 
 

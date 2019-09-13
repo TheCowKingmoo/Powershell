@@ -6,6 +6,11 @@
 $title = 'LocalCopy'
 $msg   = 'Enter the AD account being copied'
 
+[string[]]$regPath = "HKEY_CURRENT_USER\Software\Microsoft\Office\16.0\Outlook\Profiles\Outlook",
+                     "HKEY_CURRENT_USER\Software\Microsoft\Office\16.0\Outlook\Preferences"
+
+$regDest = "OutlookData.reg"
+ 
 $userName = [Microsoft.VisualBasic.Interaction]::InputBox($msg, $title)
 
 if( ( Test-Path "C:\Users\$userName" ) -eq $false )  {
@@ -17,7 +22,7 @@ if( ( Test-Path "C:\Users\$userName" ) -eq $false )  {
 
 [string[]] $exludeCopy = @("*.pst", "*.ini" ) 
 
-$destFolder = "\TRANSFER"
+$destFolder = "TRANSFER"
 $destRootFolder = ":\TRANSFER"
 
 $driveArray = (Get-PSDrive).Name
@@ -27,7 +32,7 @@ $drivePathFound = $false
 
 $regSourcePath = "C:\Users\$userName\"
 [string[]]$pathArray = 
-                "Desktop",
+               "Desktop",
                 "Documents",
                 "Pictures",
                 "Music",
@@ -38,7 +43,7 @@ $regSourcePath = "C:\Users\$userName\"
                 "AppData\Local\Google",
                 "AppData\Roaming\Microsoft\Signatures",
                 "AppData\Roaming\Adobe\Acrobat\DC\Stamps",
-                "AppData\Roaming\Adobe\Acrobat\2015\Stamps",
+               "AppData\Roaming\Adobe\Acrobat\2015\Stamps",
                 "\AppData\Local\Cisco\Cisco AnyConnect Secure Mobility Client"
               
 [string]$actualDrivePath = Get-Location
@@ -98,7 +103,7 @@ while( $i -lt $pathArray.Count )  {
   if( $check -eq $true )  {
     
     Write-Output "Copying..."
-    Write-Output $pathArray[$i]
+    
 
     if( $pathArray[$i] -eq "AppData\Roaming\Adobe\Acrobat\2015\Stamps" )  {
 
@@ -110,14 +115,26 @@ while( $i -lt $pathArray.Count )  {
 
     }
 
+    Write-Output $pathArray[$i] "->" $actualDestPath
     #Write-Output $actualSourcePath
     #Write-Output $actualDestPath
 
     Copy-Item $actualSourcePath -Destination $actualDestPath -Recurse -ErrorAction SilentlyContinue -Exclude $exludeCopy
-  
+    Write-Output "Next"
   }  ##end copy if
 
   $i = $i + 1
 }  ##end path loop
+
+$j = 0
+foreach( $item in $regPath )  {
+
+    $actualRegDest = $destPath + "\" + $j + $regDest
+    reg export $regPath[$j] $actualRegDest
+    $j = $j + 1
+}
+
+
+
 
 Write-Output "Program is Finished Coping"
