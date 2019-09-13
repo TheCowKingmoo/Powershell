@@ -41,7 +41,6 @@ $regSourcePath = "C:\Users\$userName\"
                 "AppData\Roaming\Adobe\Acrobat\2015\Stamps",
                 "\AppData\Local\Cisco\Cisco AnyConnect Secure Mobility Client"
               
-
 [string]$actualDrivePath = Get-Location
 
 if( $actualDrivePath -eq $null )  {
@@ -70,7 +69,6 @@ if( $actualDrivePath -eq $null )  {
 }
 
 Write-Output $actualDrivePath
-
 
 if( ($drivePathFound) -eq $false )  {
   
@@ -114,8 +112,6 @@ while( $i -lt $pathArray.Count )  {
 
     #Write-Output $actualSourcePath
     #Write-Output $actualDestPath
-
-    
 
     Copy-Item $actualSourcePath -Destination $actualDestPath -Recurse -ErrorAction SilentlyContinue -Exclude $exludeCopy
   
