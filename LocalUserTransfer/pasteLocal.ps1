@@ -51,22 +51,28 @@ $sourceFolders = Get-ChildItem -Path $sourcePath -Name
 
 $destPathFirst = "C:\Users\$userName"
 
+$j = 0
 foreach( $folder in $sourceFolders )  {
    
   $actualSourcePath = $sourcePath + "\" + $folder    
 
   if( $folder -eq $regFile )  {
     
+    $output = "Action:" + $j + " Registry Importing " + $actualSourcePath
+    Write-Output $output
     reg import $actualSourcePath
   
   }  else  {
 
+    $output = "Action:" + $j + " Copying " + $actualSourcePath + " to " + $actualDestPath
+    Write-Output $output
     $actualDestPath = $destPathFirst
 
   
     Copy-Item $actualSourcePath -Destination $actualDestPath -Recurse -Force
   
   }
+  $j = $j + 1
 
 } 
 

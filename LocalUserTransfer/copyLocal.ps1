@@ -114,10 +114,9 @@ while( $i -lt $pathArray.Count )  {
       $actualDestPath = $destPath + "\" + $pathArray[$i]
 
     }
-
-    Write-Output $pathArray[$i] "->" $actualDestPath
-    #Write-Output $actualSourcePath
-    #Write-Output $actualDestPath
+    
+    $output = "Action:" + $i + " Copying " + $actualSourcePath + " to " + $actualDestPath
+    Write-Output $output
 
     Copy-Item $actualSourcePath -Destination $actualDestPath -Recurse -ErrorAction SilentlyContinue -Exclude $exludeCopy
     Write-Output "Next"
@@ -129,6 +128,8 @@ while( $i -lt $pathArray.Count )  {
 $j = 0
 foreach( $item in $regPath )  {
 
+    $output = "Action:" + ($i+$j) + " Registry Exporting to " + $actualRegDest
+    Write-Output $output
     $actualRegDest = $destPath + "\" + $j + $regDest
     reg export $regPath[$j] $actualRegDest
     $j = $j + 1
